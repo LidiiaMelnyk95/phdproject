@@ -8,7 +8,9 @@ driver = webdriver.Firefox(executable_path= '/Users/lidiiamelnyk/Documents/korre
 driver.get(urlpage)
 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var "
                       "lenOfPage=document.body.scrollHeight;return lenOfPage;")
-# sleep for 30s
-time.sleep(30)
+# sleep for 3s
+time.sleep(3)
 results = driver.find_element_by_xpath('//*[@id="frm"]/div[3]/div[1]/div[7]/div/div[2]/div[10]/div[3]/div/div/div[2]').text
-print(results)
+name =  driver.find_element_by_xpath('//*[@id="frm"]/div[3]/div[1]/div[7]/div/div[2]/div[10]/div[3]/div/div/div[1]/a').text
+#date = driver.find_element_by_xpath('//*[@id="frm"]/div[3]/div[1]/div[7]/div/div[2]/div[10]/div[3]/div/div/div[1]/text()')
+print(results, name)
