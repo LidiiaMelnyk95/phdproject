@@ -4,13 +4,17 @@ from selenium import webdriver
 import time
 import pandas as pd
 urlpage = 'https://korrespondent.net/world/4361670-v-yndyy-nachaly-molytsia-bohyne-COVID'
-driver = webdriver.Firefox(executable_path= '/Users/lidiiamelnyk/Documents/korrespondent/geckodriver')
+fireFoxOptions = webdriver.FirefoxOptions()
+fireFoxOptions.headless = True
+driver = webdriver.Firefox(executable_path= '/Users/lidiiamelnyk/Documents/korrespondent/geckodriver', options=fireFoxOptions)
 driver.get(urlpage)
 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var "
                       "lenOfPage=document.body.scrollHeight;return lenOfPage;")
 # sleep for 3s
-time.sleep(3)
+time.sleep(15)
+button = driver.find_element_by_css_selector('a[onclick="loadComments()"]')
+button.click()
 results = driver.find_element_by_xpath('//*[@id="frm"]/div[3]/div[1]/div[7]/div/div[2]/div[10]/div[3]/div/div/div[2]').text
 name =  driver.find_element_by_xpath('//*[@id="frm"]/div[3]/div[1]/div[7]/div/div[2]/div[10]/div[3]/div/div/div[1]/a').text
-#date = driver.find_element_by_xpath('//*[@id="frm"]/div[3]/div[1]/div[7]/div/div[2]/div[10]/div[3]/div/div/div[1]/text()')
+#date = driver.find_element_by_xpath(' — 27.05.2021, 17:44        ')
 print(results, name)
