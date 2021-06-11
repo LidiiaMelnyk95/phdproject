@@ -109,6 +109,19 @@ for i, row in dataframe1.iterrows():
 import datetime
 dataframe1 = dataframe1.reindex(columns = ['url', 'comment','date','name','readers','predicted_language'])
 dataframe1.drop_duplicates()
+one_sentence_comments = dataframe1["comment"].str.split('.').apply(pd.Series, 1).stack()
+one_sentence_comments.index = dataframe1['comment_new'].index.droplevel(-1)  # to line up with df's index
+
+
+        # There are blank or emplty cell values after above process. Removing them
+one_sentence_comments.replace('', np.nan, inplace=True)
+one_sentence_comments.dropna(inplace=True)
+one_sentence_comments.name = 'OSC'
+
+del dataframe1['OSC']
+dataframe1 = dataframe1.join(one_sentence_comments)
+print(dataframe1.head(10))
+
 with open('/Users/lidiiamelnyk/Documents/comments_censor_net.csv', 'w+', newline = '', encoding='utf-8-sig') as file:
     dataframe1.to_csv(file, sep=',', na_rep='', float_format=None,
                columns=['url', 'comment', 'date', 'name','readers','predicted_language'],

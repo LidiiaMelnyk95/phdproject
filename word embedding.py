@@ -1,15 +1,9 @@
 import pandas as pd
 from gensim.models import Word2Vec
-from gensim.models import KeyedVectors
-from gensim.test.utils import datapath
 from gensim.models.phrases import Phrases, Phraser
-import numpy as np
-import itertools
 from time import time  # To time our operations
 from collections import defaultdict  # For word frequency
 import multiprocessing
-from sklearn.cluster import KMeans
-from sklearn.neighbors import KDTree
 import logging  # Setting up the loggings to monitor gensim
 logging.basicConfig(format="%(levelname)s - %(asctime)s: %(message)s", datefmt= '%H:%M:%S', level=logging.INFO)
 
