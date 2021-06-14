@@ -9,12 +9,28 @@ df = pd.read_csv('/Users/lidiiamelnyk/Documents/GitHub/Linguistic_materials/Yout
 for i, row in df.iterrows():
     correct_data = []
     s = row['comment_time']
-    try:
-        parsed_s = dateparser.parse(s, settings={'RELATIVE_BASE': datetime.datetime(2021, 6, 4)}).strftime('%m/%d/%Y')
-        correct_data.append(parsed_s)
-    except ValueError:
-        correct_data = []
+    s = s.replace('(edited)','').strip('')
+    if s is None:
         pass
-    df.at[i, 'date'] = correct_data.append(parsed_s)
+    parsed_s = dateparser.parse(s, settings={'RELATIVE_BASE': datetime.datetime(2021, 6, 4)}).strftime('%m/%d/%Y')
+    correct_data.append(parsed_s)
+    df.at[i, 'date'] = correct_data
 
+print(df['content'].count())
 print(df['date'].head(10))
+
+df.drop_duplicates(subset ="content")
+
+for i, row in df.iterrows():
+    length = []
+    counter = 0
+    row_length =  row['content'].split( )
+    for i in row_length:
+        counter = counter + 1
+        length.append(counter)
+    df.at[i, 'comment_length'] = length
+    for l in row['comment_length']:
+        if l < 3:
+            df.drop(row)
+
+print(df['content'].count())
