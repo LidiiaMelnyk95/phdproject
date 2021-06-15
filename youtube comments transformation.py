@@ -22,15 +22,20 @@ print(df['date'].head(10))
 df.drop_duplicates(subset ="content")
 
 for i, row in df.iterrows():
-    length = []
     counter = 0
-    row_length =  row['content'].split( )
-    for i in row_length:
+    length = []
+    row_length =  row['content'].split()
+    for k in row_length:
         counter = counter + 1
-        length.append(counter)
-    df.at[i, 'comment_length'] = length
-    for l in row['comment_length']:
-        if l < 3:
-            df.drop(row)
+    length.append(counter)
+    for m in length:
+        length = round(m)
+        if m < 3:
+            length = 'NaN'
+        else:
+            length = round(m)
+            df.at[i, 'comment_length'] = length
+
+df.dropna(axis = 0, how='any', thresh=None, subset=None, inplace=False)
 
 print(df['content'].count())
