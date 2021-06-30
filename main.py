@@ -1,6 +1,8 @@
 import numpy as np
+
+import os
+
 import pandas as pd
-# import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.naive_bayes import MultinomialNB
@@ -41,7 +43,7 @@ russian = file2sentences("/Users/lidiiamelnyk/Downloads/articles_russian_no_dupl
 X = np.array(ukrainian + russian)
 y = np.array(['uk'] * len(ukrainian) + ['ru'] * len(russian))
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
 
 cnt = CountVectorizer(analyzer='char', ngram_range=(2, 2))
 
@@ -54,30 +56,10 @@ print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
 
-import glob
 
-path = '/Users/lidiiamelnyk/Documents/comments_folder/' # use your path
-all_files = glob.glob(path + "/*.csv")
-
-li = []
-
-for filename in all_files:
-    df = pd.read_csv(filename, index_col=None, sep = ',', header=0,  encoding='utf-8-sig',
-                         float_precision='round_trip')
-    li.append(df)
-
-dataframe1 = pd.concat(li, axis=0, ignore_index=True)
+dataframe1 = pd.read_csv('/Users/lidiiamelnyk/Documents/comments_folder/all_comments.csv', sep = ',', encoding = 'utf-8-sig')
 
 
-
-spec_chars = ['"',"#","%","&","'","(",")",
-              "*","+","/",";","<",
-              "=",">","?","@","[","\\","]","^","_",
-              "`","{","|","}","~","–", '$']
-for char in spec_chars:
-    dataframe1['comment'] = dataframe1['comment'].str.replace(char, ' ')
-
-print (dataframe1['comment'].head())
 
 for i, row in dataframe1.iterrows():
     language = []
@@ -107,26 +89,17 @@ for i, row in dataframe1.iterrows():
     else:
         dataframe1.at[i, 'predicted_language'] = "Ukrainian"
 import datetime
-dataframe1 = dataframe1.reindex(columns = ['url', 'comment','date','name','readers','predicted_language'])
-dataframe1.drop_duplicates()
-one_sentence_comments = dataframe1["comment"].str.split('.').apply(pd.Series, 1).stack()
-one_sentence_comments.index = dataframe1['comment_new'].index.droplevel(-1)  # to line up with df's index
+dataframe1 = dataframe1.reindex(columns = ['url', 'comment','date','name','predicted_language'])
 
 
-        # There are blank or emplty cell values after above process. Removing them
-one_sentence_comments.replace('', np.nan, inplace=True)
-one_sentence_comments.dropna(inplace=True)
-one_sentence_comments.name = 'OSC'
 
-del dataframe1['OSC']
-dataframe1 = dataframe1.join(one_sentence_comments)
-print(dataframe1.head(10))
-
-with open('/Users/lidiiamelnyk/Documents/comments_censor_net.csv', 'w+', newline = '', encoding='utf-8-sig') as file:
+with open('/Users/lidiiamelnyk/Documents/comments_folder/all_comments_edited.csv', 'w+', newline = '', encoding='utf-8-sig') as file:
     dataframe1.to_csv(file, sep=',', na_rep='', float_format=None,
-               columns=['url', 'comment', 'date', 'name','readers','predicted_language'],
+               columns=['url', 'comment', 'date', 'name','predicted_language'],
                header=True, index=False, index_label=None,
                mode='a', compression='infer',
                quoting=None, quotechar='"', line_terminator=None, chunksize=None,
                date_format=str, doublequote=True, escapechar=None, decimal='.', errors='strict')
     file.close()
+
+
