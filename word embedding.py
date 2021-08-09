@@ -7,8 +7,9 @@ import multiprocessing
 import logging  # Setting up the loggings to monitor gensim
 logging.basicConfig(format="%(levelname)s - %(asctime)s: %(message)s", datefmt= '%H:%M:%S', level=logging.INFO)
 
-file = pd.read_csv('/Users/lidiiamelnyk/Documents/lemmatized_dataframe.csv',  sep = ',', encoding='utf-8-sig',
+f = pd.read_csv('/Users/lidiiamelnyk/Documents/lemmatized_dataframe.csv',  sep = ',', encoding='utf-8-sig',
                          float_precision='round_trip')
+file = f[f['model_result']=='__label____label__HATE']
 
 #sent = file['lemmatized'].astype(str)
 import re
@@ -26,7 +27,7 @@ for iter, row in file.iterrows():
 
 sent1 =  [row.split() for row in file['changed'].astype(str)]
 
-phrases = Phrases(sent1, min_count=20, progress_per=10000)
+phrases = Phrases(sent1, min_count=10, progress_per=10000)
 
 bigram = Phraser(phrases)
 
@@ -44,7 +45,7 @@ print(len(word_freq))
 #train the model
 feature_size = 10
 cores = multiprocessing.cpu_count() # Count the number of cores in a computer
-w2v_model = Word2Vec(min_count=20, #the words (bigrams) should be met in a corpus at least this number of times
+w2v_model = Word2Vec(min_count=10, #the words (bigrams) should be met in a corpus at least this number of times
                      window=3,  #The maximum distance between the current and predicted word within a sentence. E.g. window words on the left and window words on the left of our target
                      sample=6e-5, #float - The threshold for configuring which higher-frequency words are randomly downsampled. Highly influencial.
                      alpha=0.07, #The initial learning rate
@@ -112,7 +113,7 @@ X, labels_true = make_blobs(n_samples=3000, centers=centers, cluster_std=0.7)
 # #############################################################################
 # Compute clustering with Means
 
-k_means = KMeans(init='k-means++', n_clusters=3, n_init=10)
+k_means = KMeans(init='k-means++', n_clusters=3, n_init=5)
 t0 = time.time()
 k_means.fit(X)
 t_batch = time.time() - t0
@@ -121,7 +122,7 @@ t_batch = time.time() - t0
 # Compute clustering with MiniBatchKMeans
 
 mbk = MiniBatchKMeans(init='k-means++', n_clusters=3, batch_size=batch_size,
-                      n_init=10, max_no_improvement=10, verbose=0)
+                      n_init=5, max_no_improvement=10, verbose=0)
 t0 = time.time()
 mbk.fit(X)
 t_mini_batch = time.time() - t0
@@ -144,17 +145,3 @@ mbk_means_cluster_centers = mbk.cluster_centers_[order]
 k_means_labels = pairwise_distances_argmin(X, k_means_cluster_centers)
 mbk_means_labels = pairwise_distances_argmin(X, mbk_means_cluster_centers)
 
-# KMeans
-ax = fig.add_subplot(1, 3, 1)
-for k, col in zip(range(centroids), colors):
-    my_members = k_means_labels == k
-    cluster_center = k_means_cluster_centers[k]
-    ax.plot(X[my_members, 0], X[my_members, 1], 'w',
-            markerfacecolor=col, marker='.')
-    ax.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col,
-            markeredgecolor='k', markersize=6)
-ax.set_title('KMeans')
-ax.set_xticks(())
-ax.set_yticks(())
-plt.text(-3.5, 1.8,  'train time: %.2fs\ninertia: %f' % (
-    t_batch, k_means.inertia_))

@@ -15,17 +15,17 @@ columns_names = 'url', 'comment', 'date', 'name'
 
 def construct_topics_urls():
     topic_urls = []
-    for i in range(1, 55):
+    for i in range(1, 100):
         url = theme_url_corona_world
         page_num = i + 1
         url_new = url + 'p' + str(page_num)
         topic_urls.append(url_new)
-    for i in range(1, 61):
+    for i in range(1, 100):
         url = theme_url_curfew
         page_num = i + 1
         url_new = url + 'p' + str(page_num)
         topic_urls.append(url_new)
-    for i in range(1, 12):
+    for i in range(1, 100):
         url = theme_url_vaccination
         page_num = i + 1
         url_new = url + 'p' + str(page_num)
@@ -153,7 +153,10 @@ def scrape_text(url):
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except ConnectionResetError:
+        pass
     # while True:
     #   main()
     #  time.sleep(120)

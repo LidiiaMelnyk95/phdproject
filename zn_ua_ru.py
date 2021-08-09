@@ -1,11 +1,13 @@
 import fasttext
 import pandas as pd
-model = fasttext.load_model("model1.bin")
-
-data_in = pd.read_csv('/Users/lidiiamelnyk/Documents/censor_net_ru_corrected.csv')
+model = fasttext.load_model("model.bin")
+fasttext.FastText.eprint = lambda x: None
+data_in = pd.read_csv('/Users/lidiiamelnyk/Documents/comments_folder/all_comments.csv')
 
 all_rows = 0
 hate_rows = 0
+data_in = data_in.drop_duplicates(subset=['url', 'comment', 'date'], keep='last', inplace=False)
+
 for i, row in data_in.iterrows():
     try:
         current_data = row['comment'].replace('\n', ' ')
@@ -23,7 +25,7 @@ if all_rows > 0 :
     percent = (hate_rows / all_rows) * 100
 
 print("\tMonth :  \n All rows per month {} hate rows per month {} percentage {:.2f} %".format( all_rows, hate_rows, percent))
-with open('/Users/lidiiamelnyk/Documents/hatespeech_censor_ru.csv', 'w+', newline='', encoding='utf-8-sig') as myfile:
+with open('/Users/lidiiamelnyk/Documents/comments_folder/hatespeech_censor_full.csv', 'w+', newline='', encoding='utf-8-sig') as myfile:
     data_in.to_csv(myfile, sep=',', na_rep='', float_format=None,
                header=True, index=True, index_label=None,
                mode='w', compression='infer',

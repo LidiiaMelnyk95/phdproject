@@ -9,7 +9,7 @@ import pandas as pd
 header = {
   'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
   'accept-encoding':'gzip, deflate, br',
-  'accept-language':'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+  'accept-language':'ru-RU,ru;q=0.8,en-US;q=0.8,en;q=0.7',
   'cache-control':'no-cache',
   'dnt': '1',
   'pragma': 'no-cache',
@@ -62,7 +62,7 @@ def main():
 
 def construct_topics_urls():
     topic_urls = []
-    for i in range(1, 100):
+    for i in range(1, 700):
         page_num = i + 1
         url_new = theme_url_curfew + str(page_num)
         topic_urls.append(url_new)
@@ -70,15 +70,15 @@ def construct_topics_urls():
 
 
 def get_comments_text(url):
-    response = requests.get(url, timeout=60)
+    response = session.get(url,headers = session.headers, timeout=60)
     content = BeautifulSoup(response.content, "html.parser")
     comment_text_array = []
     next_page_url = None
-    try:
-        comment_section = content.find('div', id='comments')
-        comments_items_array = comment_section.find_all('div', attrs='item')
-        next_page_url = comment_section.find('a', attrs='pag_next')
-        for comment_item in comments_items_array:
+    comment_section = content.find('div', id='comments')
+    comments_items_array = comment_section.find_all('div', attrs='item')
+    next_page_url = comment_section.find('a', attrs='pag_next')
+    for comment_item in comments_items_array:
+        try:
             comment_text = comment_item.find('div', attrs='commtext comment_maxheight').get_text()
             comment_date = comment_item.find('div', attrs='comminfo').find('span', attrs='time').get_text()[:10]
             comment_author = comment_item.find('span', attrs='author')
@@ -87,8 +87,8 @@ def get_comments_text(url):
             author_readers = get_readers(comment_author_page_url)
             obj = {'comment': comment_text, 'date': comment_date, 'author_name': author_name, 'readers': author_readers}
             comment_text_array.append(dict(obj))
-    except AttributeError:
-        comment_text_array = []
+        except AttributeError:
+            comment_text_array = []
     return comment_text_array, next_page_url
 
 
@@ -106,7 +106,7 @@ def scrape_text(url):
                      'name': item.get('author_name'), 'readers': item.get('readers')})
     df1 = df1.append(rows, ignore_index=True)
     df1 = df1.drop_duplicates()
-    filename = "./comments_folder/" + str(hash(init_url)) + '.csv'
+    filename = "/Users/lidiiamelnyk/Documents/comments_folder/" + str(hash(init_url)) + '.csv'
     with open(filename, 'w+', encoding='utf-8-sig',newline='') as file:
         df1.to_csv(file, sep=',', na_rep='', float_format=None,
                     columns=['url', 'comment', 'date', 'name', 'readers'],
@@ -120,7 +120,7 @@ def scrape_text(url):
     return "Comments count {}".format(count)
 
 def get_name(url):
-    response = requests.get(url, timeout=60)
+    response = session.get(url,headers = session.headers, timeout=60)
     content = BeautifulSoup(response.content, "html.parser")
     author_profile = content.find('div', attrs='wrap')
     author_profile_main = author_profile.find('div', attrs='profile_main')
@@ -129,7 +129,7 @@ def get_name(url):
 
 
 def get_readers(url):
-    response = requests.get(url, timeout=60)
+    response = session.get(url,headers = session.headers, timeout=60)
     content = BeautifulSoup(response.content, "html.parser")
     author_profile = content.find('div', attrs='wrap')
     author_profile_main = author_profile.find('div', attrs='profile_main')

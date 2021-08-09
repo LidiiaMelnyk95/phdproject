@@ -21,7 +21,7 @@ def save_data(path, data):
 
 
 def train():
-    traning_parameters = {'input': 'fasttext.train', 'epoch': 50000, 'lr': 0.85, 'wordNgrams': 1, 'verbose': 2,
+    traning_parameters = {'input': 'fasttext_rus.train', 'epoch': 50000, 'lr': 0.85, 'wordNgrams': 1, 'verbose': 2,
                           'minCount': 1, 'loss': "ns",
                           'lrUpdateRate': 100, 'thread': 1, 'ws': 5, 'dim': 100}
     model = fasttext.train_supervised(**traning_parameters)
@@ -31,7 +31,7 @@ def train():
 
 def test(model):
     f1_score = lambda precision, recall: 2 * ((precision * recall) / (precision + recall))
-    nexamples, recall, precision = model.test('fasttext.test')
+    nexamples, recall, precision = model.test('fasttext_rus.train')
     print(f'recall: {recall}')
     print(f'precision: {precision}')
     print(f'f1 score: {f1_score(precision, recall)}')
@@ -48,13 +48,13 @@ def transform(input_file,  output_file):
     save_data(output_file, data)
 
 
-if __name__ == "_main_":
+if __name__ == "__main__":
         # load the model
-        path = '/Users/lidiiamelnyk/Documents/annotation_test_ua.csv'
+        path = '/Users/lidiiamelnyk/Documents/russian_comments_2-Tabelle 1.csv'
         model = fasttext.load_model("model.bin")
         test(model)
 
     # train the model
-model = test('/Users/lidiiamelnyk/Documents/annotation_test_ua.csv')
+#model = test('model.bin')
    # test(model)
     #model.predict()

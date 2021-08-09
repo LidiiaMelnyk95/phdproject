@@ -1,8 +1,10 @@
 import fasttext
-import pandas as pd
-model = fasttext.load_model("model.bin")
 
-data_in = pd.read_csv('/Users/lidiiamelnyk/Documents/censor_net_ukr_corrected.csv')
+fasttext.FastText.eprint = lambda x: None
+import pandas as pd
+model = fasttext.load_model("model1.bin")
+
+data_in = pd.read_csv('/Users/lidiiamelnyk/Documents/korrespondent/all_comments_ukr_corrected.csv')
 
 all_rows = 0
 hate_rows = 0
@@ -23,7 +25,7 @@ if all_rows > 0 :
     percent = (hate_rows / all_rows) * 100
 
 print("\tMonth :  \n All rows per month {} hate rows per month {} percentage {:.2f} %".format( all_rows, hate_rows, percent))
-with open('/Users/lidiiamelnyk/Documents/hatespeech_censor_ua.csv', 'w+', newline='', encoding='utf-8-sig') as myfile:
+with open('/Users/lidiiamelnyk/Documents/korrespondent/hatespeech_censor_ua.csv', 'w+', newline='', encoding='utf-8-sig') as myfile:
     data_in.to_csv(myfile, sep=',', na_rep='', float_format=None,
                header=True, index=True, index_label=None,
                mode='w', compression='infer',

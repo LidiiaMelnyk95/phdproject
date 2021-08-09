@@ -1,7 +1,4 @@
 import numpy as np
-
-import os
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -38,7 +35,7 @@ def file2sentences(filename):
 
 ukrainian = file2sentences("/Users/lidiiamelnyk/Downloads/articles_no_duplicates.txt")
 russian = file2sentences("/Users/lidiiamelnyk/Downloads/articles_russian_no_duplicates.txt")
-#surzhyk = file2sentences("/Users/lidiiamelnyk/Downloads/surzhyk.txt")
+
 
 X = np.array(ukrainian + russian)
 y = np.array(['uk'] * len(ukrainian) + ['ru'] * len(russian))
@@ -57,10 +54,11 @@ print(classification_report(y_test, y_pred))
 
 
 
-dataframe1 = pd.read_csv('/Users/lidiiamelnyk/Documents/comments_folder/all_comments.csv', sep = ',', encoding = 'utf-8-sig')
-
-
-
+dataframe1 = pd.read_csv('/Users/lidiiamelnyk/Documents/korrespondent/all_comments.csv', sep = ',', encoding = 'utf-8-sig')
+print(dataframe1['comment'].count())
+dataframe1 = dataframe1.drop_duplicates(subset=['url', 'comment', 'edited', 'date'], keep='last', inplace=False)
+print(dataframe1['edited'].count())
+import math
 for i, row in dataframe1.iterrows():
     language = []
     dataframe1['comment'] = dataframe1['comment'].astype(str)
@@ -70,30 +68,34 @@ for i, row in dataframe1.iterrows():
         language.append(str(language_pred))
     dataframe1.at[i, 'detected_language_array'] = ' '.join(language)
 
-import math
-
 for i, row in dataframe1.iterrows():
+    language = []
+    dataframe1['comment'] = dataframe1['comment'].astype(str)
+    for line in row['comment'].split(" "):
+        line = [line]
+        language_pred = pipeline.predict(line)
+        language.append(str(language_pred))
+    dataframe1.at[i, 'detected_language_array'] = ' '.join(language)
     dataframe1['detected_language_array'] = dataframe1['detected_language_array'].astype(str)
     array_from_string = row['detected_language_array'].split(' ')
     all_l2w_count = len(array_from_string)
     ukr_words = row['detected_language_array'].count("['uk']")
     ru_words = row['detected_language_array'].count("['ru']")
-    #szk_words = row['detected_language_array'].count("['szh']")
     percentage_ukr = math.ceil((ukr_words / all_l2w_count) * 100) / 100
     percentage_ru = math.ceil((ru_words / all_l2w_count) * 100) / 100
-    #percentage_szk = math.ceil((szk_words / all_l2w_count) * 100) / 100
+    print(percentage_ru)
     if percentage_ukr > 0.70:
         dataframe1.at[i, 'predicted_language'] = "Ukrainian"
     elif percentage_ru > 0.70:
         dataframe1.at[i, 'predicted_language'] = "Russian"
     else:
         dataframe1.at[i, 'predicted_language'] = "Ukrainian"
-import datetime
+
 dataframe1 = dataframe1.reindex(columns = ['url', 'comment','date','name','predicted_language'])
 
 
 
-with open('/Users/lidiiamelnyk/Documents/comments_folder/all_comments_edited.csv', 'w+', newline = '', encoding='utf-8-sig') as file:
+with open('/Users/lidiiamelnyk/Documents/korrespondent/all_comments_edited.csv', 'w+', newline = '', encoding='utf-8-sig') as file:
     dataframe1.to_csv(file, sep=',', na_rep='', float_format=None,
                columns=['url', 'comment', 'date', 'name','predicted_language'],
                header=True, index=False, index_label=None,

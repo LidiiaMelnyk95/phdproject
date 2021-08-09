@@ -50,7 +50,7 @@ def transform(input_file,  output_file):
 
 
 if __name__ == "__main__":
-    transform('/Users/lidiiamelnyk/Documents/russian_comments.csv',"fasttext_rus.train")
+    transform('/Users/lidiiamelnyk/Documents/ru_comment_one_sentence.csv',"fasttext_rus.train")
     #transform("data/germeval2018.test.txt", "fasttext.test")
 
     # train the model
