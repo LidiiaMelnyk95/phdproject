@@ -3,6 +3,7 @@ import numpy as np
 from mlxtend.frequent_patterns import apriori, association_rules
 import glob
 import os
+import matplotlib.pyplot as plt
 import stanza
 stanza.download('uk')
 
@@ -22,7 +23,7 @@ nlp = stanza.Pipeline('uk', processors='tokenize, pos, lemma', tokenize_no_sspli
 myfile = open('/Users/lidiiamelnyk/Documents/stop_words_ua.txt', "r", encoding = 'utf-8-sig') #upload the stopwords
 content = myfile.read()
 stopwords_list = content.split("\n") #since stopwords come in a form of a list, split them based on the newline
-df = pd.concat(map(pd.read_csv, glob.glob(os.path.join('/Users/lidiiamelnyk/Documents/GitHub/COVID-19-TweetIDs/2020-01/', "*.csv"))))
+df = pd.concat(map(pd.read_csv, glob.glob(os.path.join('/Users/lidiiamelnyk/Documents/GitHub/COVID-19-TweetIDs/2020-02/', "*.csv"))))
 
 for iter, row in df.iterrows():
 	lemmatized_sents = [] #create the list, I am going to append lemmas into
@@ -52,7 +53,7 @@ new_df = df["lemmatized"].str.split(",", expand = True)
 for col in new_df:
     items.update(new_df[col].unique())
 
-
+new_df.dropna()
 print(items)
 #custom one hot encoding
 itemset = set(items)
@@ -71,4 +72,18 @@ encoded_vals[0]
 
 ohe_df = pd.DataFrame(encoded_vals)
 
+apriori(ohe_df,min_support= 0.2, use_colnames= False, max_len= None, verbose = 0, low_memory= True )
 
+freq_items = apriori (ohe_df, min_support = 0.2, use_colnames= True, verbose = 1)
+print (freq_items.head(7))
+rules = association_rules(freq_items, metric = 'confidence', min_threshold= 0.4)
+
+plt.scatter(rules['support'], rules['confidence'], alpha = 0.2)
+plt.xlabel('support')
+plt.ylabel('confidence')
+plt.title('Support Vs. Confidence')
+plt.show()
+
+fit = np.polyfit(rules['lift'], rules['confidence'], 1)
+fit_fn = np.poly1d(fit)
+plt.plot(rules['lift'], rules['confidence'], 'yo', rules['lift'],fit_fn(rules['lift']))
