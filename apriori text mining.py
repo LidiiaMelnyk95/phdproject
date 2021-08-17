@@ -5,6 +5,7 @@ import glob
 import os
 import matplotlib.pyplot as plt
 import stanza
+import sparse
 stanza.download('uk')
 
 
@@ -68,15 +69,18 @@ for index, row in new_df.iterrows():
 	for com in commons:
 		labels[com] = 1
 	encoded_vals.append(labels)
-encoded_vals[0]
+#encoded_vals[0]
 
 ohe_df = pd.DataFrame(encoded_vals)
+apriori(ohe_df,min_support= 0.5, use_colnames= False, max_len= None, verbose = 0, low_memory= True )
 
-apriori(ohe_df,min_support= 0.2, use_colnames= False, max_len= None, verbose = 0, low_memory= True )
+freq_items = apriori(ohe_df, min_support = 0.3, use_colnames= True, verbose = 0)
+rules = association_rules(freq_items, metric = 'confidence', min_threshold= 0)
 
-freq_items = apriori (ohe_df, min_support = 0.2, use_colnames= True, verbose = 1)
-print (freq_items.head(7))
-rules = association_rules(freq_items, metric = 'confidence', min_threshold= 0.4)
+frequent_itemsets = apriori(ohe_df, min_support=0.6, use_colnames=False)
+frequent_itemsets['length'] = frequent_itemsets.apply(lambda x: len(x))
+frequent_itemsets = frequent_itemsets[ (frequent_itemsets['length'] == 2) &
+                   (frequent_itemsets['support'] >= 0.8) ]
 
 plt.scatter(rules['support'], rules['confidence'], alpha = 0.2)
 plt.xlabel('support')
