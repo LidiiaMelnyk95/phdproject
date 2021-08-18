@@ -72,22 +72,20 @@ for index, row in new_df.iterrows():
 #encoded_vals[0]
 
 ohe_df = pd.DataFrame(encoded_vals)
-apriori(ohe_df,min_support= 0.5, use_colnames= False, max_len= None, verbose = 0, low_memory= True )
+apriori(ohe_df,min_support= 0.5, use_colnames= False, max_len= None, verbose = 1, low_memory= True )
 
-freq_items = apriori(ohe_df, min_support = 0.3, use_colnames= True, verbose = 0)
+freq_items = apriori(ohe_df, min_support = 0.5, use_colnames= True, verbose = 0)
 rules = association_rules(freq_items, metric = 'confidence', min_threshold= 0)
 
-frequent_itemsets = apriori(ohe_df, min_support=0.6, use_colnames=False)
-frequent_itemsets['length'] = frequent_itemsets.apply(lambda x: len(x))
-frequent_itemsets = frequent_itemsets[ (frequent_itemsets['length'] == 2) &
-                   (frequent_itemsets['support'] >= 0.8) ]
-
-plt.scatter(rules['support'], rules['confidence'], alpha = 0.2)
+freq_items['length'] = freq_items.apply(lambda x: len(x))
+freq_items = freq_items[(freq_items['length'] >= 2)]
+print(freq_items)
+plt.scatter(rules['support'], rules['confidence'], alpha = 0.5)
 plt.xlabel('support')
 plt.ylabel('confidence')
 plt.title('Support Vs. Confidence')
 plt.show()
 
-fit = np.polyfit(rules['lift'], rules['confidence'], 1)
+'''fit = np.polyfit(rules['lift'], rules['confidence'], 1)
 fit_fn = np.poly1d(fit)
-plt.plot(rules['lift'], rules['confidence'], 'yo', rules['lift'],fit_fn(rules['lift']))
+plt.plot(rules['lift'], rules['confidence'], 'yo', rules['lift'],fit_fn(rules['lift']))'''
