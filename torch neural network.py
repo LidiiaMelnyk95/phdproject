@@ -5,67 +5,7 @@
 
 
 import torch
-#x = torch.Tensor([5,3])
-#y = torch.Tensor([2,1])
-
-
-# In[26]:
-
-
-#print(x*y)
-
-
-# In[27]:
-
-
-#x = torch.zeros([2,5])
-#print(x)
-
-
-# In[28]:
-
-
-#x.shape()
-
-
-# In[29]:
-
-
-#x.shape
-
-
-# In[30]:
-
-
-#y = torch.rand([2,5])
-
-
-# In[31]:
-
-
-#y
-
-
-# In[32]:
-
-
-#y= y.view([1,10])
-#y
-
-
-# In[33]:
-
-
-#y= y.view([1,10])
-
-
-# In[34]:
-
-
-#y
-
-
-# In[35]:
+#comes from a learning video on youtube, not my code
 
 
 import torchvision
