@@ -31,7 +31,7 @@ for i, row in df.iterrows():
 
 print(df['content'].count())
 
-new_columns = 'vedio_url', 'comment_user', 'content', 'date'
+new_columns = 'video_url', 'comment_user', 'content', 'date'
 df.reindex(columns = new_columns)
 with open('/Users/lidiiamelnyk/Documents/tweets_tsg/youtube_corrected.csv', 'w+', newline = '', encoding='utf-8-sig') as file:
     df.to_csv(file, sep=';', na_rep='', float_format=None,

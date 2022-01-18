@@ -17,9 +17,9 @@ for filename in all_files:
             df_final = pd.json_normalize(data['json'].apply(json.loads))
             filename1 = filename[:-9] + '.csv'
             try:
-                df_ukrainian = df_final[df_final["lang"] == 'uk']
+                df_ukrainian = df_final[df_final["lang"] == 'de']
                 with open(filename1, 'w+', encoding='utf-8-sig', newline='') as file:
-                    df_ukrainian.to_csv(file, sep=',', na_rep='', float_format=None,
+                    df_ukrainian.to_csv(file, sep=';', na_rep='', float_format=None,
                             header=True, index=False, index_label=None,
                             mode='a', compression='infer',
                             quoting=None, quotechar='"', line_terminator=None, chunksize=None,

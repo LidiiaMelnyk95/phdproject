@@ -1,12 +1,14 @@
 import urllib.request
 import re
 
-search_keyword="transsexueller+gesetz", "transgesetz", 'Transsexuellengesetz', \
-               'transsexuellengesetz', "TSG+Gesetz", 'Selbstbestimmungsgesetz',\
-               'transsexuellenrehct', 'reform+transsexuellengesetz', 'transsexuellengesetz+2021',\
-             'transsexuellengesetz+2020', 'Neuregelung+des+Transsexuellengesetzes','trans-gesetz',\
-               'reform+des+transgesetzes', 'neuer+transgesetz', 'das+Transsexuellengesetz',\
-               'debatte+transsexuellengesetz', 'trans-recht+gesetz-entwurf', 'entwurf+transgesetz'
+search_keyword= 'transgender', 'transsexueller', 'genderidentitaet', 'transgender+Identitaet', 'transgender+Rechte','gleichberechtigung+transgender'
+    #"transsexueller+gesetz", "transgesetz", 'Transsexuellengesetz', \
+     #          'transsexuellengesetz', "TSG+Gesetz", 'Selbstbestimmungsgesetz',\
+      #         'transsexuellenrehct', 'reform+transsexuellengesetz', 'transsexuellengesetz+2021',\
+       #      'transsexuellengesetz+2020', 'Neuregelung+des+Transsexuellengesetzes','trans-gesetz',\
+        #       'reform+des+transgesetzes', 'neuer+transgesetz', 'das+Transsexuellengesetz',\
+         #      'debatte+transsexuellengesetz', 'trans-recht+gesetz-entwurf', 'entwurf+transgesetz'
+
 #search_keywords = 'homosexuelle+segnen', 'schwule+segnen', 'segen+homosexuelle'
 links_array =  []
 for i in search_keyword:
@@ -19,5 +21,5 @@ for i in search_keyword:
 print(len(set(links_array)))
 sorted_links = str(set(links_array)).replace(',','\n')
 sorted_links = sorted_links.replace("'", '')
-with open('/Users/lidiiamelnyk/Documents/links_LGBTQ_church.txt', 'w+', encoding= 'utf-8-sig') as myfile:
+with open('/Users/lidiiamelnyk/Documents/links_youtube_trans.txt', 'w+', encoding= 'utf-8-sig') as myfile:
     myfile.write(sorted_links)

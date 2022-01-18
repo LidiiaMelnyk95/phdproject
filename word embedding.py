@@ -85,6 +85,19 @@ print(
 print(kmeans.score(X))
 
 silhouette_score = metrics.silhouette_score(X, labels, metric='euclidean')
+from sklearn.metrics import silhouette_score
+
+range_n_clusters = [2, 3, 4, 5, 6, 7, 8]
+silhouette_avg = []
+for num_clusters in range_n_clusters:
+    # initialise kmeans
+    # silhouette score
+    silhouette_avg.append(silhouette_score(X, labels))
+    plt.plot(range_n_clusters, silhouette_avg,'bx -')
+    plt.xlabel('Values of K')
+    plt.ylabel('Silhouette score')
+    plt.title('Silhouette analysis For Optimal k')
+    plt.show()
 
 print("Silhouette_score: ")
 print(silhouette_score)

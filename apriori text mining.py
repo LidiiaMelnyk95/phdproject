@@ -72,14 +72,14 @@ for index, row in new_df.iterrows():
 #encoded_vals[0]
 
 ohe_df = pd.DataFrame(encoded_vals)
-apriori(ohe_df,min_support= 0.5, use_colnames= False, max_len= None, verbose = 1, low_memory= True )
+#apriori(ohe_df,min_support= 0.5, use_colnames= False, max_len= None, verbose = 1, low_memory= True )
 
-freq_items = apriori(ohe_df, min_support = 0.5, use_colnames= True, verbose = 0)
+freq_items = apriori(ohe_df, min_support = 0.5)
 rules = association_rules(freq_items, metric = 'confidence', min_threshold= 0)
 
 freq_items['length'] = freq_items.apply(lambda x: len(x))
 freq_items = freq_items[(freq_items['length'] >= 2)]
-print(freq_items)
+
 plt.scatter(rules['support'], rules['confidence'], alpha = 0.5)
 plt.xlabel('support')
 plt.ylabel('confidence')
